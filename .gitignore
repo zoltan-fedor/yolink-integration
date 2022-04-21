@@ -1,0 +1,8 @@
+# ignore the PyCharm folder
+.idea
+
+# pycache on all levels
+*__pycache__*
+
+# do not track any of the sensitive .env files
+/.envs/*.env
