@@ -8,7 +8,14 @@ class MQTTClient:
     See https://pypi.org/project/paho-mqtt
     """
 
-    def __init__(self, access_token: str, client_id: str, home_id: str):
+    def __init__(self, access_token: str, client_id: str, home_id: str, transport: str = 'tcp'):
+        """
+
+        :param access_token:
+        :param client_id:
+        :param home_id: HomeId retrieved via the HTTP API
+        :param transport: 'tcp' or 'websockets'
+        """
 
         # this is required to subscribe to events coming from the devices of the given home
         self.home_id = home_id
@@ -18,14 +25,14 @@ class MQTTClient:
                                   clean_session=True,
                                   userdata=None,
                                   protocol=mqtt.MQTTv311,
-                                  transport='tcp'  # websocket or tcp
+                                  transport=transport  # websocket or tcp
                                   )
         self.client.username_pw_set(username=access_token)
         self.client.on_connect = self.on_connect
         self.client.on_message = self.on_message
         self.client.on_log = self.on_log
         self.client.connect(host="api.yosmart.com",
-                            port=8003,
+                            port=8003 if transport == 'tcp' else 8004,
                             keepalive=60)
 
     def on_connect(self, client, userdata, flags, rc):

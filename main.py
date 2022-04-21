@@ -69,7 +69,8 @@ def main():
         mqtt = MQTTClient(
             access_token=yolink_service.access_token.token,
             client_id=str(time.time()),  # which just need a unique client id
-            home_id=home_id
+            home_id=home_id,
+            transport='websockets'
         )
 
         mqtt.client.subscribe(f"yl-home/{home_id}/+/report", qos=0)
