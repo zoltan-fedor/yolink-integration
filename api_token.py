@@ -5,6 +5,8 @@ import requests
 from time import sleep
 from typing import Any, Dict, Optional
 
+from exceptions import ClientError, BadRequestError, RateLimitError, UnAuthorizedError, UserNotAuthorizedError
+
 
 logger = logging.getLogger(__name__)
 
@@ -24,6 +26,7 @@ class BaseService:
         self.service_definition = {
             'service_url': 'https://api.yosmart.com'
         }
+        self.service_name = 'YoSmart'
 
         # the requests session which we will use to make calls
         # Session() in requests automatically does keep-alive, so this can speed up consecutive requests
@@ -140,11 +143,11 @@ class BaseService:
             401: UnAuthorizedError,
             429: RateLimitError
         }
-        exception_class = exceptions.get(result.status_code, AIClientError)
+        exception_class = exceptions.get(result.status_code, ClientError)
 
         raise exception_class(url=result.url,
                               status=result.status_code,
-                              ai_service=self.service_name,  # type: ignore
+                              service=self.service_name,  # type: ignore
                               content=response_content)
 
     def renew_access_token(self) -> None:

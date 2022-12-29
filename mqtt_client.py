@@ -9,7 +9,7 @@ class MQTTClient:
     """
 
     def __init__(self, access_token: str, client_id: str, home_id: str, transport: str = 'tcp'):
-        """
+        """MQTT Client
 
         :param access_token:
         :param client_id:
